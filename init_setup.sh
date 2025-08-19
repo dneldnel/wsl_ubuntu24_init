@@ -4,7 +4,7 @@ set -e
 echo "===== 更新系统 ====="
 sudo apt update -y && sudo apt upgrade -y
 
-echo "===== 安装常用工具 ====="
+echo "===== 安装常用工具和网络工具 ====="
 sudo apt install -y curl git build-essential wget unzip htop \
     net-tools iproute2 dnsutils traceroute telnet netcat-openbsd \
     libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
@@ -19,16 +19,19 @@ if [ ! -d "$HOME/.pyenv" ]; then
   curl https://pyenv.run | bash
 fi
 
-# 配置 pyenv 环境变量
-if ! grep -q 'pyenv init' ~/.bashrc; then
-  cat << 'EOF' >> ~/.bashrc
+# 配置 pyenv 到 .zshrc
+if ! grep -q 'pyenv init' ~/.zshrc; then
+  cat << 'EOF' >> ~/.zshrc
 
-# pyenv setup
+# >>> pyenv setup >>>
 export PATH="$HOME/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
+# <<< pyenv setup <<<
 EOF
 fi
+
+# 当前脚本生效
 export PATH="$HOME/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
@@ -42,7 +45,18 @@ if [ ! -d "$HOME/.nvm" ]; then
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 fi
 
-# 配置 nvm 环境变量
+# 配置 nvm 到 .zshrc
+if ! grep -q 'NVM_DIR' ~/.zshrc; then
+  cat << 'EOF' >> ~/.zshrc
+
+# >>> nvm setup >>>
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# <<< nvm setup <<<
+EOF
+fi
+
+# 当前脚本生效
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
@@ -52,7 +66,6 @@ nvm alias default 22
 
 echo "===== 安装 zsh 和 oh-my-zsh ====="
 sudo apt install -y zsh
-
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
@@ -73,7 +86,9 @@ if [ ! -d "${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting" ]; then
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting
 fi
 
-# 修改 .zshrc 插件配置
-sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc
+# 修改 .zshrc 插件配置（仅第一次）
+if grep -q "plugins=(git)" ~/.zshrc; then
+  sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc
+fi
 
-echo "===== 初始化完成！请重新打开终端 ====="
+echo "===== 初始化完成！请重新打开终端 (zsh 将生效) ====="
