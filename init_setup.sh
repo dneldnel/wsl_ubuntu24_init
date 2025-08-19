@@ -5,7 +5,8 @@ echo "===== 更新系统 ====="
 sudo apt update -y && sudo apt upgrade -y
 
 echo "===== 安装常用工具 ====="
-sudo apt install -y curl git build-essential wget unzip \
+sudo apt install -y curl git build-essential wget unzip htop \
+    net-tools iproute2 dnsutils traceroute telnet netcat-openbsd \
     libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
     libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev \
     libffi-dev liblzma-dev software-properties-common
