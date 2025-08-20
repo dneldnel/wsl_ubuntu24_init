@@ -1,3 +1,16 @@
+# 在远程服务器上执行：
+# chmod 700 ~/.ssh
+# chmod 600 ~/.ssh/authorized_keys
+
+# 检查 /etc/ssh/sshd_config
+# 确保这些配置是正确的
+# PubkeyAuthentication yes
+# AuthorizedKeysFile .ssh/authorized_keys
+# PasswordAuthentication yes   #（允许密码备用）
+
+
+
+
 #!/usr/bin/env bash
 set -e
 
